@@ -133,4 +133,6 @@ We now have two properties application-dev and application-aws for local develop
 We have learnt about the approaches for local cloud development, using the LocalStack and Docker and we have replaced
 RDS and Cognito with a local postgres instance and KeyCloak.
 
-
+### Building User Registration and Login with Amazon Cognito
+We will now learn how to add User Registration and Login using AWS Cognito. We will first learn about Amazon Cognito.
+We will then look at OAuth 2.0 and OpenID Connect and look at the OAuth Authorization Code Grant Flow.
