@@ -1226,4 +1226,5 @@ We will use Spring Boot Logback for logging:
 Here we will use centralized logging. We will use CloudWatch logging and learn how to send logs from ECS Fargate
 to Amazon CloudWatch.
 
+![image](https://user-images.githubusercontent.com/27693622/228988138-00f0fb54-4738-45fb-8c8a-b68bd21cec23.png)
 
