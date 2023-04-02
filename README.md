@@ -1318,6 +1318,10 @@ npm run *:destroy -- --profile stratospheric
 ```
 Run the above command with all the earlier scripts to ensure that all stacks are removed
 
+This is what the app looks like after deploy:
+
+![drspencer_2023-4-2T19-7-49](https://user-images.githubusercontent.com/27693622/229370825-ccbcc867-86ab-486a-9bfe-391dbb503290.png)
+
 ### CloudWatch Logging Terminology
 - Log Stream: stream of logs from the same source (e.g. a single Docker Container)
 - Log Group: An aggregation of log streams to group logs together
