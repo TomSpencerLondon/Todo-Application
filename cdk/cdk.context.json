@@ -60,5 +60,23 @@
   "hosted-zone:account=221875718260:domainName=stratospheric.dev:region=eu-central-1": {
     "Id": "/hostedzone/Z081807328Y7TTKJ4NKFU",
     "Name": "stratospheric.dev."
-  }
+  },
+  "hosted-zone:account=706054169063:domainName=drspencer.io:region=eu-west-2": {
+    "Id": "/hostedzone/Z0234999214VP4XI868MU",
+    "Name": "drspencer.io."
+  },
+  "availability-zones:account=706054169063:region=eu-west-2": [
+    "eu-west-2a",
+    "eu-west-2b",
+    "eu-west-2c"
+  ],
+  "hosted-zone:account=706054169063:domainName=drspencer.io:region=eu-west-1": {
+    "Id": "/hostedzone/Z0234999214VP4XI868MU",
+    "Name": "drspencer.io."
+  },
+  "availability-zones:account=706054169063:region=eu-west-1": [
+    "eu-west-1a",
+    "eu-west-1b",
+    "eu-west-1c"
+  ]
 }

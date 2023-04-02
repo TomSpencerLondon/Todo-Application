@@ -1228,3 +1228,105 @@ to Amazon CloudWatch.
 
 ![image](https://user-images.githubusercontent.com/27693622/228988138-00f0fb54-4738-45fb-8c8a-b68bd21cec23.png)
 
+Above, we can see that we are running our application in an ECS Cluster. The Fargate Task runs our Docker images
+and we will send logs to Amazon CloudWatch so that we can keep our logs in a centralized location.
+
+### Deploying the application
+
+We first need to set up our cdk.json to the correct configuration for our account:
+```yaml
+{
+  "context": {
+    "applicationName": "todo-maker",
+    "region": "eu-west-2",
+    "accountId": "706054169063",
+    "dockerRepositoryName": "todo-maker",
+    "dockerImageTag": "1",
+    "applicationUrl": "https://app.drspencer.io",
+    "loginPageDomainPrefix": "stratospheric-staging",
+    "environmentName": "staging",
+    "springProfile": "aws",
+    "activeMqUsername": "activemqUser",
+    "canaryUsername": "canary",
+    "canaryUserPassword": "SECRET_OVERRIDDEN_BY_WORKFLOW",
+    "confirmationEmail": "info@stratospheric.dev",
+    "applicationDomain": "app.drspencer.io",
+    "sslCertificateArn": "arn:aws:acm:eu-west-2:706054169063:certificate/ab9a0a58-cd09-493f-84cb-b42f9db0902a",
+    "hostedZoneDomain": "drspencer.io",
+    "githubToken": "SECRET_OVERRIDDEN_BY_WORKFLOW"
+  }
+}
+```
+We then bootstrap the resources:
+```bash
+npm run bootstrap -- --profile stratospheric
+```
+
+We then create an SSL Certificate for my domain:
+```bash
+npm run certificate:deploy -- --profile stratospheric
+```
+
+We then deploy the NetworkStack-dependent infrastructure:
+```bash
+npm run network:deploy -- --profile stratospheric
+npm run database:deploy -- --profile stratospheric
+npm run activeMq:deploy -- --profile stratospheric
+```
+Next we deploy the NetworkStack-independent infrastructure:
+```bash
+npm run repository:deploy -- --profile stratospheric
+npm run messaging:deploy -- --profile stratospheric
+npm run cognito:deploy -- --profile stratospheric
+```
+Then we run the command to route traffic from our custom domain to the ELB:
+```bash
+npm run domain:deploy -- --profile stratospheric
+```
+
+#### Build and Push the First Docker Image
+First we go to the root of the application and run:
+```bash
+./gradlew build docker build -t <accountId>.dkr.ecr.<region>.amazonaws.com/<applicationName>:1
+
+aws ecr get-login-password --region <region> --profile stratospheric | docker login \
+--username AWS --password-stdin <accountId>.drk.ecr.
+
+docker push <accountId>.drk.ecr.<region>.amazonaws.com/<applicationName>:1
+```
+
+#### Deploy the Docker image to the ECS Cluster
+```bash
+npm run service:deploy -- --profile stratospheric
+```
+
+#### Deploy monitoring Infrastructure
+```bash
+cd cdk
+npm run monitoring:deploy -- --profile stratospheric
+```
+
+#### Deploy Canary stack
+```bash
+cd cdk
+npm run canary:deploy -- --profile stratospheric
+```
+
+#### Destroy everything
+```bash
+npm run *:destroy -- --profile stratospheric
+```
+Run the above command with all the earlier scripts to ensure that all stacks are removed
+
+### CloudWatch Logging Terminology
+- Log Stream: stream of logs from the same source (e.g. a single Docker Container)
+- Log Group: An aggregation of log streams to group logs together
+- CloudWatch Log Insights: Service that provides UI and query language to search one or log groups
+
+Example queries to CloudWatch could include:
+```bash
+fields @timestamp, @message
+| sort @timestamp desc
+| limit 20
+``` 
+
